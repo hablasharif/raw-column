@@ -1,4 +1,3 @@
 pandas
 lxml
-base64
 re
