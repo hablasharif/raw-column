@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import base64
 import re
+import pyperclip
 
 # Function to convert raw input to a single column
 def convert_to_single_column(raw_text):
@@ -39,3 +40,8 @@ if st.button('Convert'):
         b64 = base64.b64encode(csv.encode()).decode()
         href = f'<a href="data:file/csv;base64,{b64}" download="single_column.csv">Download CSV file</a>'
         st.markdown(href, unsafe_allow_html=True)
+
+        # Provide an option to copy the result to the clipboard
+        if st.button('Copy to Clipboard'):
+            pyperclip.copy(result_df.to_string(index=False))
+            st.success("Data copied to clipboard!")
