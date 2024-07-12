@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import base64
 import re
-import pyperclip
 
 # Function to convert raw input to a single column
 def convert_to_single_column(raw_text):
@@ -49,5 +48,5 @@ if st.session_state['result_df'] is not None:
 
     # Provide an option to copy the result to the clipboard
     if st.button('Copy to Clipboard'):
-        pyperclip.copy(result_df.to_string(index=False))
+        st.experimental_set_clipboard(result_df.to_string(index=False))
         st.success("Data copied to clipboard!")
