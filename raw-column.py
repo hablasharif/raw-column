@@ -17,6 +17,10 @@ def convert_to_single_column(raw_text):
     df = pd.DataFrame(data)
     return df
 
+# Initialize session state for the DataFrame
+if 'result_df' not in st.session_state:
+    st.session_state['result_df'] = None
+
 # Streamlit app
 st.title('Raw to Single Column Converter')
 
@@ -29,19 +33,21 @@ if st.button('Convert'):
         st.error("Please enter some text.")
     else:
         # Convert raw text to a single column
-        result_df = convert_to_single_column(raw_text)
+        st.session_state['result_df'] = convert_to_single_column(raw_text)
 
-        # Display the resulting DataFrame
-        st.write('Converted Data:')
-        st.dataframe(result_df)
+# Display the resulting DataFrame if it exists in session state
+if st.session_state['result_df'] is not None:
+    result_df = st.session_state['result_df']
+    st.write('Converted Data:')
+    st.dataframe(result_df)
 
-        # Provide an option to download the result as a CSV
-        csv = result_df.to_csv(index=False)
-        b64 = base64.b64encode(csv.encode()).decode()
-        href = f'<a href="data:file/csv;base64,{b64}" download="single_column.csv">Download CSV file</a>'
-        st.markdown(href, unsafe_allow_html=True)
+    # Provide an option to download the result as a CSV
+    csv = result_df.to_csv(index=False)
+    b64 = base64.b64encode(csv.encode()).decode()
+    href = f'<a href="data:file/csv;base64,{b64}" download="single_column.csv">Download CSV file</a>'
+    st.markdown(href, unsafe_allow_html=True)
 
-        # Provide an option to copy the result to the clipboard
-        if st.button('Copy to Clipboard'):
-            pyperclip.copy(result_df.to_string(index=False))
-            st.success("Data copied to clipboard!")
+    # Provide an option to copy the result to the clipboard
+    if st.button('Copy to Clipboard'):
+        pyperclip.copy(result_df.to_string(index=False))
+        st.success("Data copied to clipboard!")
